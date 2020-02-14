@@ -87,7 +87,7 @@ sealed abstract class UserDefinedFunction {
    *
    * @since 2.3.0
    */
-  def asNondeterministic(): UserDefinedFunction
+  def asNonDeterministic(): UserDefinedFunction
 }
 
 private[sql] case class SparkUserDefinedFunction(
@@ -109,7 +109,7 @@ private[sql] case class SparkUserDefinedFunction(
     val inputTypes = inputSchemas.map(_.map(_.dataType).getOrElse(AnyDataType))
     // `ScalaReflection.Schema.nullable` is false iff the type is primitive. Also `Any` is not
     // primitive.
-    val inputsPrimitive = inputSchemas.map(_.map(!_.nullable).getOrElse(false))
+    val inputsPrimitive = inputSchemas.map(_.exists(!_.nullable))
     ScalaUDF(
       f,
       dataType,
@@ -133,7 +133,7 @@ private[sql] case class SparkUserDefinedFunction(
     }
   }
 
-  override def asNondeterministic(): SparkUserDefinedFunction = {
+  override def asNonDeterministic(): SparkUserDefinedFunction = {
     if (!deterministic) {
       this
     } else {
@@ -172,7 +172,7 @@ private[sql] case class UserDefinedAggregator[IN, BUF, OUT](
     }
   }
 
-  override def asNondeterministic(): UserDefinedAggregator[IN, BUF, OUT] = {
+  override def asNonDeterministic(): UserDefinedAggregator[IN, BUF, OUT] = {
     if (!deterministic) {
       this
     } else {

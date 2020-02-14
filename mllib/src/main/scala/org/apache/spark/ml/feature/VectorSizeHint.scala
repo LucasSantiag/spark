@@ -117,7 +117,7 @@ class VectorSizeHint @Since("2.3.0") (@Since("2.3.0") override val uid: String)
                 s" got ${vector.size}")
             }
             vector
-          }.asNondeterministic()
+          }.asNonDeterministic()
           checkVectorSizeUDF(col(localInputCol))
         case VectorSizeHint.SKIP_INVALID =>
           val checkVectorSizeUDF = udf { vector: Vector =>

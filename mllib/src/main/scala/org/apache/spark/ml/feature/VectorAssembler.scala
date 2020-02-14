@@ -141,7 +141,7 @@ class VectorAssembler @Since("1.4.0") (@Since("1.4.0") override val uid: String)
     // Data transformation.
     val assembleFunc = udf { r: Row =>
       VectorAssembler.assemble(lengths, keepInvalid)(r.toSeq: _*)
-    }.asNondeterministic()
+    }.asNonDeterministic()
     val args = $(inputCols).map { c =>
       schema(c).dataType match {
         case DoubleType => dataset(c)

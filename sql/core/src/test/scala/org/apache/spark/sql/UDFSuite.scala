@@ -124,24 +124,24 @@ class UDFSuite extends QueryTest with SharedSparkSession {
 
   test("ZeroArgument non-deterministic UDF") {
     val foo = udf(() => Math.random())
-    spark.udf.register("random0", foo.asNondeterministic())
+    spark.udf.register("random0", foo.asNonDeterministic())
     val df = sql("SELECT random0()")
     assert(df.logicalPlan.asInstanceOf[Project].projectList.forall(!_.deterministic))
     assert(df.head().getDouble(0) >= 0.0)
 
-    val foo1 = foo.asNondeterministic()
+    val foo1 = foo.asNonDeterministic()
     val df1 = testData.select(foo1())
     assert(df1.logicalPlan.asInstanceOf[Project].projectList.forall(!_.deterministic))
     assert(df1.head().getDouble(0) >= 0.0)
 
-    val bar = udf(() => Math.random(), DataTypes.DoubleType).asNondeterministic()
+    val bar = udf(() => Math.random(), DataTypes.DoubleType).asNonDeterministic()
     val df2 = testData.select(bar())
     assert(df2.logicalPlan.asInstanceOf[Project].projectList.forall(!_.deterministic))
     assert(df2.head().getDouble(0) >= 0.0)
 
     val javaUdf = udf(new UDF0[Double] {
       override def call(): Double = Math.random()
-    }, DoubleType).asNondeterministic()
+    }, DoubleType).asNonDeterministic()
     val df3 = testData.select(javaUdf())
     assert(df3.logicalPlan.asInstanceOf[Project].projectList.forall(!_.deterministic))
     assert(df3.head().getDouble(0) >= 0.0)
@@ -520,7 +520,7 @@ class UDFSuite extends QueryTest with SharedSparkSession {
     val nonDeterministicJavaUDF = udf(
       new UDF0[Int] {
         override def call(): Int = scala.util.Random.nextInt()
-      }, IntegerType).asNondeterministic()
+      }, IntegerType).asNonDeterministic()
 
     assert(spark.range(2).select(nonDeterministicJavaUDF()).distinct().count() == 2)
   }

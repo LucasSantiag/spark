@@ -405,7 +405,7 @@ class StringIndexerModel (
             s"set Param handleInvalid to ${StringIndexer.KEEP_INVALID}.")
         }
       }
-    }.asNondeterministic()
+    }.asNonDeterministic()
   }
 
   @Since("2.0.0")
